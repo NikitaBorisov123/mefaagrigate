@@ -247,21 +247,45 @@
       bandTable('Точность реальной потребности по группам продаж', data, 'realNeed');
   }
 
+  function analyzeInWorker(buffer, sourceFile) {
+    return new Promise(function (resolve, reject) {
+      const worker = new Worker('./hourly_worker.js');
+      let finished = false;
+      function finish(callback, value) {
+        if (finished) return;
+        finished = true;
+        worker.terminate();
+        callback(value);
+      }
+      worker.onmessage = function (event) {
+        const message = event.data || {};
+        if (message.type === 'progress') {
+          status.textContent = message.message || 'Обработка файла…';
+        } else if (message.type === 'result') {
+          finish(resolve, message.data);
+        } else if (message.type === 'error') {
+          finish(reject, new Error(message.message || 'Не удалось обработать Excel.'));
+        }
+      };
+      worker.onerror = function (event) {
+        if (event && event.preventDefault) event.preventDefault();
+        finish(reject, new Error(event && event.message ? event.message : 'Ошибка фоновой обработки Excel.'));
+      };
+      worker.postMessage({ type: 'analyze', buffer: buffer, sourceFile: sourceFile }, [buffer]);
+    });
+  }
+
   input.addEventListener('change', async function () {
     const file = input.files && input.files[0];
     if (!file) return;
-    if (!window.XLSX) { status.className = 'status error'; status.textContent = 'Не удалось загрузить модуль чтения Excel.'; return; }
+    if (!window.Worker) { status.className = 'status error'; status.textContent = 'Браузер не поддерживает фоновую обработку файлов.'; return; }
     input.disabled = true;
     status.className = 'status';
-    status.textContent = 'Чтение и анализ файла…';
+    status.textContent = 'Чтение файла…';
     await new Promise(function (resolve) { setTimeout(resolve, 30); });
     try {
       const buffer = await file.arrayBuffer();
-      const workbook = window.XLSX.read(buffer, { type: 'array', cellDates: false, cellText: false });
-      if (!workbook.SheetNames.length) throw new Error('в книге нет листов.');
-      const sheetName = workbook.SheetNames[0];
-      const rows = window.XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, raw: true, defval: null });
-      const data = parseRows(rows, file.name, sheetName);
+      const data = await analyzeInWorker(buffer, file.name);
       if (!data.usedRows) throw new Error('нет агрегированных записей в интервале 09:00–20:59 после применения порога 27%.');
       content.innerHTML = render(data);
       status.className = 'status ok';

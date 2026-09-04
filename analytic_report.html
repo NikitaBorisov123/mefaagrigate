@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Дневной аналитический отчёт</title>
+  <link rel="stylesheet" href="./report.css">
+</head>
+<body>
+  <main class="page">
+    <nav class="nav">
+      <a href="./index.html">Главная</a>
+      <a class="active" href="./analytic_report.html">Дневной отчёт</a>
+      <a href="./hourly_report.html">Почасовой отчёт</a>
+    </nav>
+    <section class="panel upload">
+      <div class="upload-row">
+        <div>
+          <h2>Загрузить дневной Excel</h2>
+          <div class="muted">Выберите книгу с колонками дневного отчёта.</div>
+        </div>
+        <label class="file-label">Выбрать файл<input id="excel-file" type="file" accept=".xlsx,.xls,.xlsm,.xlsb"></label>
+        <span id="upload-status" class="upload-status">Файл ещё не выбран.</span>
+      </div>
+      <div class="privacy">Excel обрабатывается локально в браузере и не загружается на сервер.</div>
+    </section>
+    <div id="report-content">
+      <section class="panel empty">
+        <h1>Дневной отчёт готов к работе</h1>
+        <p>Выберите Excel выше. После обработки здесь появятся показатели и сводные таблицы.</p>
+      </section>
+    </div>
+    <div class="foot">Публичная версия не содержит встроенных рабочих данных.</div>
+    <script src="./xlsx.full.min.js"></script>
+    <script src="./report_interactive.js"></script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Почасовой аналитический отчёт</title>
+  <link rel="stylesheet" href="./report.css">
+</head>
+<body class="hourly">
+  <main class="page">
+    <nav class="nav">
+      <a href="./index.html">Главная</a>
+      <a href="./analytic_report.html">Дневной отчёт</a>
+      <a class="active" href="./hourly_report.html">Почасовой отчёт</a>
+    </nav>
+    <section class="panel upload">
+      <div class="upload-row">
+        <div>
+          <h2>Загрузить почасовой Excel</h2>
+          <div class="muted">Выберите книгу с колонками почасового отчёта.</div>
+        </div>
+        <label class="file-label">Выбрать файл<input id="hourly-file" type="file" accept=".xlsx,.xls,.xlsm,.xlsb"></label>
+        <span id="hourly-status" class="status">Файл ещё не выбран.</span>
+      </div>
+      <div class="privacy">Excel обрабатывается локально в браузере и не загружается на сервер.</div>
+    </section>
+    <div id="hourly-report-content">
+      <section class="panel empty">
+        <h1>Почасовой отчёт готов к работе</h1>
+        <p>Выберите Excel выше. Данные будут агрегированы по магазину, дате и периоду, после чего появится аналитика.</p>
+      </section>
+    </div>
+    <div class="foot">Публичная версия не содержит встроенных рабочих данных.</div>
+    <script src="./xlsx.full.min.js"></script>
+    <script src="./hourly_report.js"></script>
+  </main>
+</body>
+</html>

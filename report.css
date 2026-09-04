@@ -1,0 +1,72 @@
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#17212b;font:14px/1.45 "Segoe UI",Arial,sans-serif}
+.page{max-width:1240px;margin:0 auto;padding:28px}
+.nav{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap}
+.nav a{padding:8px 12px;border-radius:8px;text-decoration:none;color:#176b73;background:#e8f4f1;font-weight:600}
+.nav a.active{color:#fff;background:#176b73}
+.hero{background:linear-gradient(135deg,#123b57,#176b73);color:#fff;padding:30px;border-radius:18px;box-shadow:0 10px 30px #14384d22}
+.hourly .hero{background:linear-gradient(135deg,#3b2f66,#176b73)}
+h1{margin:0 0 8px;font-size:30px}
+h2{margin:0 0 16px;font-size:20px}
+h3{margin:0 0 8px;font-size:15px}
+.sub{opacity:.82}
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(145px,1fr));margin:18px 0}
+.card,.panel,.period-card{background:#fff;border:1px solid #e4e9ee;border-radius:14px;box-shadow:0 3px 14px #17384c0c}
+.card{padding:17px}
+.panel{padding:20px;margin-top:16px}
+.value{font-size:24px;font-weight:700;color:#123b57}
+.label{color:#687784;font-size:12px;margin-top:4px}
+.two{grid-template-columns:1.35fr .65fr}
+.findings{margin:0;padding-left:20px}
+.findings li{margin:7px 0}
+.muted,.section-note{color:#6b7882}
+.section-note{margin:-10px 0 14px;font-size:12px}
+.scroll{overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 9px;border-bottom:1px solid #e9edf0;text-align:right;white-space:nowrap}
+th{color:#60717d;font-size:12px;background:#f8fafb}
+th:first-child,td:first-child{text-align:left}
+.good{color:#087f5b;font-weight:700}
+.warn{color:#c2410c;font-weight:700}
+.tag{display:inline-block;padding:3px 8px;border-radius:20px;background:#e8f4f1;color:#176b5d;font-size:12px;font-weight:600}
+.legend{display:flex;gap:18px;color:#60717d;font-size:12px;flex-wrap:wrap}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.dist{display:grid;gap:11px}
+.dist-row{display:grid;grid-template-columns:110px minmax(180px,1fr) 70px;gap:12px;align-items:center}
+.dist-label{font-weight:600;color:#43535e}
+.dist-track{display:flex;height:24px;background:#edf1f3;border-radius:6px;overflow:hidden}
+.dist-seg{display:flex;align-items:center;justify-content:center;min-width:0;color:#fff;font-size:11px;font-weight:700}
+.dist-seg.g0{background:#176b73}
+.dist-seg.g1{background:#ef8354}
+.dist-total{text-align:right;font-weight:700}
+.upload{margin:0 0 16px;border:1px dashed #8bb8b3;background:#f7fffd}
+.upload-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.file-label{display:inline-block;background:#176b73;color:#fff;padding:10px 16px;border-radius:9px;font-weight:600;cursor:pointer}
+.file-label:hover{background:#12565d}
+.file-label input{display:none}
+.upload-status,.status{color:#5f707b}
+.upload-status.ok,.status.ok{color:#087f5b}
+.upload-status.error,.status.error{color:#b42318}
+.privacy{margin-top:8px;color:#73818c;font-size:12px}
+.empty{padding:42px 24px;text-align:center}
+.empty h1{color:#123b57;font-size:26px}
+.empty p{max-width:650px;margin:8px auto 0;color:#687784}
+.period-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.period-card{padding:18px}
+.period-card h3{font-size:17px;margin-bottom:12px}
+.summary-value{color:#123b57;font-size:28px;font-weight:700}
+.summary-label{color:#60717d;margin-top:4px}
+.metric{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #edf0f2}
+.metric:last-child{border-bottom:0}
+.metric b{color:#123b57}
+.foot{color:#6c7a85;font-size:12px;margin:18px 2px}
+.landing{max-width:850px;margin:10vh auto;padding:28px}
+.landing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
+.landing-card{display:block;padding:24px;border-radius:14px;background:#fff;border:1px solid #e4e9ee;text-decoration:none;color:#17212b;box-shadow:0 3px 14px #17384c0c}
+.landing-card:hover{border-color:#8bb8b3;transform:translateY(-1px)}
+.landing-card h2{color:#176b73;margin-bottom:7px}
+.landing-card p{color:#687784;margin:0}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.page{padding:14px}}
+@media(max-width:800px){.period-grid,.landing-grid{grid-template-columns:1fr}.hero{padding:22px}}
+@media print{body{background:#fff}.page{max-width:none;padding:0}.upload,.nav{display:none}.panel,.card,.period-card,.hero{box-shadow:none;break-inside:avoid}}

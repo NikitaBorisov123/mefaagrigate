@@ -40,6 +40,22 @@ th:first-child,td:first-child{text-align:left}
 .dist-seg.g0{background:#176b73}
 .dist-seg.g1{background:#ef8354}
 .dist-total{text-align:right;font-weight:700}
+.matrix-section{margin-top:26px;padding-top:22px;border-top:1px solid #e9edf0}
+.matrix-visual{overflow-x:auto;padding-top:20px}
+.matrix-inner{min-width:740px}
+.matrix-chart{display:grid;grid-template-columns:48px minmax(0,1fr)}
+.matrix-axis{height:230px;display:flex;flex-direction:column;justify-content:space-between;padding-right:8px;text-align:right;color:#6b7882;font-size:11px}
+.matrix-plot{height:230px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;align-items:end;border-bottom:1px solid #aab8c2;background:linear-gradient(to top,#e6ecef 1px,transparent 1px) 0 0/100% 25%}
+.matrix-bars{height:100%;display:flex;align-items:end;justify-content:center;gap:4px;padding:0 6px}
+.matrix-bar{position:relative;display:block;width:18px;min-width:12px;max-width:24px;border-radius:3px 3px 0 0}
+.matrix-bar-label{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;color:#43535e;white-space:nowrap}
+.matrix-x-axis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-left:48px;text-align:center;color:#43535e;font-size:12px;padding:7px 0 0}
+.matrix-legend{display:flex;flex-wrap:wrap;gap:7px 14px;justify-content:center;margin:15px 0 20px;color:#43535e;font-size:11px}
+.matrix-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.acc-0{background:#12a857}.acc-1{background:#7653b5}.acc-2{background:#9aa0a6}.acc-3{background:#f4b000}.acc-4{background:#5b98d4}.acc-5{background:#70b568}.acc-6{background:#087344}
+.matrix-table th{background:#e7f5ee;color:#225a45}
+.matrix-table .matrix-total td{font-weight:700;background:#f2faf6}
+.matrix-table .matrix-grand-total{font-weight:700;color:#087344}
 .upload{margin:0 0 16px;border:1px dashed #8bb8b3;background:#f7fffd}
 .upload-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .file-label{display:inline-block;background:#176b73;color:#fff;padding:10px 16px;border-radius:9px;font-weight:600;cursor:pointer}

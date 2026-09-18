@@ -319,6 +319,56 @@
     return '<section class="panel"><h2>Распределение салонов по точности прогноза</h2><div class="section-note">Для каждого салона рассчитана средняя точность по всем оставшимся дням.</div><div class="legend">' + legend + '</div><div class="dist">' + rows + '</div></section>';
   }
 
+  function accuracySalesMatrix(groupEntries, salonEntries) {
+    const salesBands = ['S_Менее 50', 'S_50-100', 'S_100-150', 'S_Более 150'];
+    const accuracyBands = ['Т_0-60', 'Т_60-70', 'Т_70-80', 'Т_80-85', 'Т_85-90', 'Т_90-95', 'Т_95-100'];
+    const sections = groupEntries.map(function (groupItem) {
+      const group = groupItem[0];
+      const counts = accuracyBands.map(function () { return salesBands.map(function () { return 0; }); });
+      const salesTotals = salesBands.map(function () { return 0; });
+      const accuracyTotals = accuracyBands.map(function () { return 0; });
+      let groupTotal = 0;
+      salonEntries.forEach(function (salon) {
+        if (salon.group.toLocaleLowerCase('ru-RU') !== group.toLocaleLowerCase('ru-RU')) return;
+        const accuracyIndex = accuracyBands.indexOf(accuracyBand(calculated(salon.values).averageAccuracy));
+        const salesIndex = salesBands.indexOf(salesBand(salon));
+        if (accuracyIndex < 0 || salesIndex < 0) return;
+        counts[accuracyIndex][salesIndex] += 1;
+        salesTotals[salesIndex] += 1;
+        accuracyTotals[accuracyIndex] += 1;
+        groupTotal += 1;
+      });
+
+      const maxShare = groupTotal ? Math.max.apply(null, counts.flat().map(function (count) { return count * 100 / groupTotal; })) : 0;
+      const axisMax = Math.max(5, Math.ceil(maxShare / 5) * 5);
+      const axis = [4, 3, 2, 1, 0].map(function (tick) { return '<span>' + (axisMax * tick / 4).toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + '%</span>'; }).join('');
+      const bars = salesBands.map(function (salesBandName, salesIndex) {
+        return '<div class="matrix-bars">' + accuracyBands.map(function (accuracyBandName, accuracyIndex) {
+          const count = counts[accuracyIndex][salesIndex];
+          if (!count) return '';
+          const share = count * 100 / groupTotal;
+          const height = (share * 100 / axisMax).toFixed(2);
+          const label = share >= 0.8 ? '<span class="matrix-bar-label">' + num(Math.round(share)) + '%</span>' : '';
+          const title = group + ' · ' + salesBandName + ' · ' + accuracyBandName + ': ' + num(count) + ' магазинов (' + share.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + '%)';
+          return '<span class="matrix-bar acc-' + accuracyIndex + '" style="height:' + height + '%" title="' + esc(title) + '">' + label + '</span>';
+        }).join('') + '</div>';
+      }).join('');
+      const legend = accuracyBands.map(function (band, index) { return '<span><i class="acc-' + index + '"></i>' + esc(band) + '</span>'; }).join('');
+      const header = salesBands.map(function (band) { return '<th>' + esc(band) + '</th>'; }).join('');
+      const totals = salesTotals.map(function (count) { return '<td>' + num(count) + '</td>'; }).join('');
+      const rows = accuracyBands.map(function (band, accuracyIndex) {
+        return '<tr><td>' + esc(band) + '</td>' + counts[accuracyIndex].map(function (count) { return '<td>' + num(count) + '</td>'; }).join('') + '<td>' + num(accuracyTotals[accuracyIndex]) + '</td></tr>';
+      }).join('');
+
+      return '<div class="matrix-section"><h3>' + esc(group) + ' · ' + num(groupTotal) + ' магазинов</h3>' +
+        '<div class="matrix-visual"><div class="matrix-inner"><div class="matrix-chart"><div class="matrix-axis">' + axis + '</div><div class="matrix-plot">' + bars + '</div></div>' +
+        '<div class="matrix-x-axis">' + salesBands.map(function (band) { return '<span>' + esc(band) + '</span>'; }).join('') + '</div><div class="matrix-legend">' + legend + '</div></div></div>' +
+        '<div class="scroll"><table class="matrix-table"><thead><tr><th>Группа точности</th>' + header + '<th>Итого</th></tr></thead><tbody>' +
+        '<tr class="matrix-total"><td>Итого</td>' + totals + '<td class="matrix-grand-total">' + num(groupTotal) + '</td></tr>' + rows + '</tbody></table></div></div>';
+    }).join('');
+    return '<section class="panel"><h2>Точность прогноза по группам продаж</h2><div class="section-note">Каждый магазин учитывается один раз. Проценты на графике — доля от всех магазинов соответствующего типа; в матрице показано количество магазинов.</div>' + sections + '</section>';
+  }
+
   function renderReport(data) {
     const overall = calculated(data.overall);
     const groupEntries = Array.from(data.groups.entries()).sort(function (a, b) { return a[0].localeCompare(b[0], 'ru'); });
@@ -341,6 +391,7 @@
       salesPivot(groupEntries, salonEntries) +
       operationalBySales(groupEntries, salonEntries) +
       accuracyDistribution(groupEntries, salonEntries) +
+      accuracySalesMatrix(groupEntries, salonEntries) +
       '<section class="grid two">' + salonTable('Лидеры по точности', leaders) + salonTable('Зоны внимания', attention) + '</section>';
   }
 

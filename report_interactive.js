@@ -319,6 +319,20 @@
     return '<section class="panel"><h2>Распределение салонов по точности прогноза</h2><div class="section-note">Для каждого салона рассчитана средняя точность по всем оставшимся дням.</div><div class="legend">' + legend + '</div><div class="dist">' + rows + '</div></section>';
   }
 
+  function accuracyShares(salonEntries) {
+    const total = salonEntries.length;
+    const atLeast80 = salonEntries.filter(function (salon) { return calculated(salon.values).averageAccuracy >= 0.80; }).length;
+    const atLeast60 = salonEntries.filter(function (salon) { return calculated(salon.values).averageAccuracy >= 0.60; }).length;
+    const cards = [
+      ['80–100%', atLeast80],
+      ['60–100%', atLeast60],
+      ['Ниже 60%', total - atLeast60]
+    ].map(function (item) {
+      return '<div class="accuracy-share-card"><div class="accuracy-share-value">' + (total ? pct(item[1] / total) : '—') + '</div><div class="accuracy-share-label">' + item[0] + '</div><div class="accuracy-share-count">' + num(item[1]) + ' из ' + num(total) + ' магазинов</div></div>';
+    }).join('');
+    return '<section class="panel accuracy-shares"><h2>Доля магазинов по точности прогноза</h2><div class="section-note">Средняя точность каждого магазина рассчитана по оставшимся дням. Группы пересекаются: 60–100% включает 80–100%.</div><div class="accuracy-share-grid">' + cards + '</div></section>';
+  }
+
   function accuracySalesMatrix(groupEntries, salonEntries) {
     const salesBands = ['S_Менее 50', 'S_50-100', 'S_100-150', 'S_Более 150'];
     const accuracyBands = ['Т_0-60', 'Т_60-70', 'Т_70-80', 'Т_80-85', 'Т_85-90', 'Т_90-95', 'Т_95-100'];
@@ -387,6 +401,7 @@
 
     return '<section class="hero"><h1>Аналитический отчёт по прогнозу</h1><div class="sub">Источник: ' + esc(data.sourceFile) + ' · Лист: ' + esc(data.sheetName) + ' · Период: ' + esc(range) + ' · Сформирован: ' + esc(now) + '</div></section>' +
       '<section class="grid kpis"><div class="card"><div class="value">' + pct(overall.averageAccuracy) + '</div><div class="label">Среднедневная точность</div></div><div class="card"><div class="value">' + pct(overall.needAccuracy) + '</div><div class="label">Точность потребности</div></div><div class="card"><div class="value">' + pctOrDash(overall.realNeedAccuracy) + '</div><div class="label">Точность потребности реальная</div></div><div class="card"><div class="value">' + pct(overall.planExecution) + '</div><div class="label">Факт / план</div></div><div class="card"><div class="value">' + num(data.salons.size) + '</div><div class="label">Салонов</div></div><div class="card"><div class="value">' + avg(data.overall.metrics[4]) + '</div><div class="label">Среднее покрытие</div></div><div class="card"><div class="value">' + avg(data.overall.metrics[5]) + '</div><div class="label">Средняя утилизация</div></div></section>' +
+      accuracyShares(salonEntries) +
       '<section class="panel"><h2>Сравнение СТРИТ и ТЦ</h2><div class="section-note">Среднедневная точность рассчитана как среднее значений точности по всем оставшимся дням.</div><div class="scroll"><table><thead><tr><th>Группа</th><th>Салонов</th><th>Факт / план</th><th>Среднедневная точность</th><th>Точность потребности</th><th>Точность потребности реальная</th></tr></thead><tbody>' + groupRows + '</tbody></table></div></section>' +
       salesPivot(groupEntries, salonEntries) +
       operationalBySales(groupEntries, salonEntries) +

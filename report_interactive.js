@@ -224,6 +224,32 @@
       }).join('') + '</tbody></table></div></div>';
   }
 
+  function selectedSalons(salonEntries) {
+    const requested = [
+      'G470, СЗ_Колпино_Пролетарская_36_МеркурийТЦ',
+      'V339, ПВ_Уфа_Первомайская_98',
+      'U551, УР_Нефтеюганск_Усть-Балыкская_ТЦ_секц',
+      'U408, УР_Челябинск_Комарова/Салютная_2',
+      'A084, СТ_Балашиха_Энтузиастов_54А',
+      'D083, ДВ_Чита_Бабушкина_64',
+      'K984, КВ_Липецк_Краснозаводская_23_ТЦ',
+      'D164, ДВ_Улан-Удэ_Автомобилистов_4А_МоллТЦ',
+      'K962, КВ_Сочи_Ленина_1А_ТатулянТЦ',
+      'C022, ЦР_Дзержинск_Гайдара_61Г_645',
+      'A72N, СТ_Звенигород_Московская_20_15',
+      'C240, ЦР_Брянск_2яМичурина_42_МБТЦ',
+      'S576, СБ_Кызыл_ТувинскихДобровольцев_24',
+      'G091, СЗ_Псков_Ленина_7А',
+      'A67N, СТ_Павловский Посад_Привокзальная_19'
+    ];
+    const rows = requested.map(function (requestedSalon) {
+      const code = requestedSalon.split(',')[0].trim().toLocaleLowerCase('ru-RU');
+      const salon = salonEntries.find(function (item) { return item.salon.toLocaleLowerCase('ru-RU').startsWith(code + ','); });
+      return '<tr><td>' + esc(salon ? salon.salon : requestedSalon) + '</td><td>' + (salon ? esc(salon.group) : '—') + '</td><td>' + (salon ? pct(calculated(salon.values).averageAccuracy) : 'Нет данных') + '</td></tr>';
+    }).join('');
+    return '<section class="panel selected-salons"><h2>Точность прогноза выбранных магазинов</h2><div class="section-note">Средняя точность за период; дни с точностью ниже 20% исключены.</div><div class="scroll"><table><thead><tr><th>Магазин</th><th>Группа</th><th>Средняя точность</th></tr></thead><tbody>' + rows + '</tbody></table></div></section>';
+  }
+
   function salesBand(salon) {
     const metric = salon.values.metrics[3];
     const value = metric.count ? metric.sum / metric.count : 0;
@@ -407,7 +433,8 @@
       operationalBySales(groupEntries, salonEntries) +
       accuracyDistribution(groupEntries, salonEntries) +
       accuracySalesMatrix(groupEntries, salonEntries) +
-      '<section class="grid two">' + salonTable('Лидеры по точности', leaders) + salonTable('Зоны внимания', attention) + '</section>';
+      '<section class="grid two">' + salonTable('Лидеры по точности', leaders) + salonTable('Зоны внимания', attention) + '</section>' +
+      selectedSalons(salonEntries);
   }
 
   input.addEventListener('change', async function () {

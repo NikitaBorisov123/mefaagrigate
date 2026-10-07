@@ -422,8 +422,7 @@
       return '<tr><td><span class="tag">' + esc(key) + '</span></td><td>' + num(salons) + '</td><td>' + pct(calc.planExecution) + '</td><td class="' + accuracyClass(calc.averageAccuracy) + '">' + pct(calc.averageAccuracy) + '</td><td>' + pct(calc.needAccuracy) + '</td><td>' + pctOrDash(calc.realNeedAccuracy) + '</td></tr>';
     }).join('');
 
-    const leaders = salonEntries.slice().sort(function (a, b) { return calculated(b.values).averageAccuracy - calculated(a.values).averageAccuracy || b.values.rows - a.values.rows; }).slice(0, 10);
-    const attention = salonEntries.slice().sort(function (a, b) { return calculated(a.values).averageAccuracy - calculated(b.values).averageAccuracy || b.values.rows - a.values.rows; }).slice(0, 10);
+    const attention = salonEntries.slice().sort(function (a, b) { return calculated(a.values).averageAccuracy - calculated(b.values).averageAccuracy || b.values.rows - a.values.rows; }).slice(0, 15);
 
     return '<section class="hero"><h1>Аналитический отчёт по прогнозу</h1><div class="sub">Источник: ' + esc(data.sourceFile) + ' · Лист: ' + esc(data.sheetName) + ' · Период: ' + esc(range) + ' · Сформирован: ' + esc(now) + '</div></section>' +
       '<section class="grid kpis"><div class="card"><div class="value">' + pct(overall.averageAccuracy) + '</div><div class="label">Среднедневная точность</div></div><div class="card"><div class="value">' + pct(overall.needAccuracy) + '</div><div class="label">Точность потребности</div></div><div class="card"><div class="value">' + pctOrDash(overall.realNeedAccuracy) + '</div><div class="label">Точность потребности реальная</div></div><div class="card"><div class="value">' + pct(overall.planExecution) + '</div><div class="label">Факт / план</div></div><div class="card"><div class="value">' + num(data.salons.size) + '</div><div class="label">Салонов</div></div><div class="card"><div class="value">' + avg(data.overall.metrics[4]) + '</div><div class="label">Среднее покрытие</div></div><div class="card"><div class="value">' + avg(data.overall.metrics[5]) + '</div><div class="label">Средняя утилизация</div></div></section>' +
@@ -433,7 +432,7 @@
       operationalBySales(groupEntries, salonEntries) +
       accuracyDistribution(groupEntries, salonEntries) +
       accuracySalesMatrix(groupEntries, salonEntries) +
-      '<section class="grid two">' + salonTable('Лидеры по точности', leaders) + salonTable('Зоны внимания', attention) + '</section>' +
+      salonTable('Зоны внимания', attention) +
       selectedSalons(salonEntries);
   }
 
